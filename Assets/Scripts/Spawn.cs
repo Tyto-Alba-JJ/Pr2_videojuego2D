@@ -16,7 +16,10 @@ public class Spawn : MonoBehaviour
     void Update()
     {
         if(transform.position.y <= -10){
-            transform.position = spawn.transform.position; 
+            transform.position = spawn.transform.position;
+            GameManager.vidas--;
+            AudioManager.Instance.SonarClipUnaVez(AudioManager.Instance.fxDead);
+              
         };
     }
 }

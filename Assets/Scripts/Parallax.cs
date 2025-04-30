@@ -4,18 +4,26 @@ using UnityEngine;
 
 public class Parallax : MonoBehaviour
 {
-    GameObject player;
-    GameObject camara;
-    public float velocidadParallax = 1;
+    public float ParallaxSpeed = 1;
     void Start()
     {
-        player = GameObject.FindWithTag("PLayer");
-        camara = GameObject.FindWithTag("MainCamera");
+    
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position = camara.transform.position * velocidadParallax;
+       
     }
+
+    void FixedUpdate(){
+         transform.position = new Vector3(Camera.main.transform.position.x/ParallaxSpeed, Camera.main.transform.position.y/ParallaxSpeed, 0);
+        
+    }
+
+
 }
+
+
+
+

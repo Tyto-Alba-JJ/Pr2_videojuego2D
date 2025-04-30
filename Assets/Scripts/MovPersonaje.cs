@@ -3,18 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+
 public class MovPersonaje : MonoBehaviour
 {
-public float velocidad = 5f;
-public float multiplicador = 5f;
 
-public float multiplicadorSalto = 5f;
+    public GameObject spawn;
+    public float velocidad = 5f;
+    public float multiplicador = 5f;
 
-private bool puedoSaltar = true;
+    float movTeclas;
 
-private Rigidbody2D rb;
+    public float multiplicadorSalto = 5f;
 
-private Animator animatorController;
+    private bool puedoSaltar = true;
+    private bool activaSaltoFixed = false;
+
+    public bool mirandoDerecha = true;
+
+    private Rigidbody2D rb;
+
+    private bool EstoyMuerto = false;
+
+    private Animator animatorController;
+
+    bool SoyVerde;
 
     // Start is called before the first frame update
     void Start()
@@ -29,47 +41,93 @@ private Animator animatorController;
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.EstoyMuerto) return;
+
         float miDeltaTime = Time.deltaTime;
 
-        float movTeclas = Input.GetAxis("Horizontal");
-        
-        rb.velocity = new Vector2(movTeclas*multiplicador, rb.velocity.y);
+        movTeclas = Input.GetAxis("Horizontal");
 
-        if(movTeclas < 0){
+
+
+        if (movTeclas < 0)
+        {
             this.GetComponent<SpriteRenderer>().flipX = true;
-        }else if(movTeclas > 0){
+            mirandoDerecha = false;
+        }
+        else if (movTeclas > 0)
+        {
             this.GetComponent<SpriteRenderer>().flipX = false;
+            mirandoDerecha = true;
         }
 
-        if(movTeclas != 0){
+        if (movTeclas != 0)
+        {
             animatorController.SetBool("activacamina", true);
-        }else{
+        }
+        else
+        {
             animatorController.SetBool("activacamina", false);
         }
 
-       RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 0.5f);
-       Debug.DrawRay(transform.position, Vector2.down, Color.white);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 0.5f);
+        Debug.DrawRay(transform.position, Vector2.down, Color.white);
 
-        if (hit){
+        if (hit)
+        {
             puedoSaltar = true;
-        }else{
+        }
+        else
+        {
             puedoSaltar = false;
-        };
+        }
+        ;
 
-        if(Input.GetKeyDown(KeyCode.Space) && puedoSaltar){
+        if (Input.GetKeyDown(KeyCode.Space) && puedoSaltar)
+        {
+            activaSaltoFixed = true;
+
+        }
+
+        if (GameManager.vidas <= 0)
+        {
+            GameManager.EstoyMuerto = true;
+        }
+
+    }
+
+    void FixedUpdate()
+    {
+        rb.velocity = new Vector2(movTeclas * multiplicador, rb.velocity.y);
+
+        if (activaSaltoFixed == true)
+        {
             rb.AddForce(
-                new Vector2(0,multiplicadorSalto),
-                ForceMode2D.Impulse
-            );
-            //puedoSaltar = false;
+              new Vector2(0, multiplicadorSalto),
+              ForceMode2D.Impulse
+          );
+          activaSaltoFixed = false;
         }
     }
 
-    void OnCollisionEnter2D(){
-        puedoSaltar = true;
+    public void Respawnear()
+    {
+        Debug.Log("vidas" + GameManager.vidas);
+        GameManager.vidas = GameManager.vidas - 1;
+        Debug.Log("vidas" + GameManager.vidas);
+        transform.position = spawn.transform.position;
     }
 
+    public void CambiarColor(){
+        if (SoyVerde){
+            this.GetComponent<SpriteRenderer>().color = Color.white;
+            SoyVerde=false;
+        }else{
+            this.GetComponent<SpriteRenderer>().color = Color.green;
+            SoyVerde = true;
+        }
+        
+
+    }
 }
 
 
-  

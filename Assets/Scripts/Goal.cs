@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class Goal : MonoBehaviour
 {
-    public int valor;
+    public int valor = 1;
+
+    Animator miAnimadorController;
     void Start()
     {
-        
+       
+   miAnimadorController = this.GetComponent<Animator>();
     }
 
    
@@ -22,7 +25,10 @@ public class Goal : MonoBehaviour
         {   
             GameManager.marcador = GameManager.marcador+valor;
             this.GetComponent<Animator>().SetBool("destruirmoneda", true);
+            miAnimadorController.SetBool("GoalCapture", true);
+            AudioManager.Instance.SonarClipUnaVez(AudioManager.Instance.fxCoin);
             Destroy(this.gameObject, 1.0f);
+        
         }
 
     }

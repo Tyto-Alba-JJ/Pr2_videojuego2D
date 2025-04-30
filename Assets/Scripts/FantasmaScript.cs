@@ -7,8 +7,10 @@ using UnityEngine;
 public class FantasmaScript : MonoBehaviour
 {
     public int vidaFantasma = 10;
+
+    AudioSource _audioSource; 
     public float velocidad = 1;
-    public float velocidadAtaque = 5 ;
+    public float velocidadAtaque = 5;
     public float limiteDcha = 1;
     public float limiteIzq = 1;
     private Vector3 posLimitDcha;
@@ -20,7 +22,7 @@ public class FantasmaScript : MonoBehaviour
 
     private float distancia;
     public float distataque = 3;
-    public float distPatrol = 4;
+    public float distPatrol = 3.32f;
 
     void Start()
     {
@@ -31,69 +33,87 @@ public class FantasmaScript : MonoBehaviour
         posLimitDcha = new Vector3(posInicial.x + limiteDcha, posInicial.y, 0);
         posLimitIzq = new Vector3(posInicial.x - limiteIzq, posInicial.y, 0);
 
+        _audioSource = this.GetComponent<AudioSource>();
+
     }
 
     // Update is called once per frame
     void Update()
-    { 
-         distancia = Vector3.Distance(transform.position, player.transform.position);
+    {
+        distancia = Vector3.Distance(transform.position, player.transform.position);
 
-         if (distancia <= distataque)
-            {
-                estadofantasma = "Ataque";
+        if (distancia <= distataque)
+        {
+            estadofantasma = "Ataque";
 
-            }
+        }
 
-        if (distancia >= distPatrol){
+        if (distancia >= distPatrol)
+        {
             estadofantasma = "Patrol";
         }
 
-       // PATROL
+        // PATROL
 
 
         if (estadofantasma == "Patrol")
         {
-    
+            if (distancia > (limiteDcha + limiteIzq)){
+                 transform.position = Vector3.MoveTowards(transform.position, posInicial, velocidadAtaque * Time.deltaTime);
+            }
+                if (direccionFantasma == true)
+                {
+                    transform.Translate(velocidad * Time.deltaTime, 0, 0);
+                }
 
-            if (direccionFantasma == true)
-            {
-                transform.Translate(velocidad * Time.deltaTime, 0, 0);
-            }
+                if (direccionFantasma == false)
+                {
+                    transform.Translate((velocidad * Time.deltaTime) * -1, 0, 0);
+                }
 
-            if (direccionFantasma == false)
-            {
-                transform.Translate((velocidad * Time.deltaTime) * -1, 0, 0);
-            }
-
-            if (transform.position.x >= posLimitDcha.x)
-            {
-                direccionFantasma = false;
-                this.GetComponent<SpriteRenderer>().flipX = false;
-            }
-            if (transform.position.x <= posLimitIzq.x)
-            {
-                direccionFantasma = true;
-                this.GetComponent<SpriteRenderer>().flipX = true;
-            }
+                if (transform.position.x >= posLimitDcha.x)
+                {
+                    direccionFantasma = false;
+                    this.GetComponent<SpriteRenderer>().flipX = false;
+                }
+                if (transform.position.x <= posLimitIzq.x)
+                {
+                    direccionFantasma = true;
+                    this.GetComponent<SpriteRenderer>().flipX = true;
+                }
+          
 
 
         }
 
-        if (estadofantasma == "Ataque"){
+        if (estadofantasma == "Ataque")
+        {
+           
+            if(_audioSource.isPlaying == false){
+                _audioSource.Play();
+            }
+            transform.position = Vector3.MoveTowards(transform.position, player.transform.position, velocidadAtaque * Time.deltaTime);
+        }else{
+               if((transform.position == posInicial)&& _audioSource.isPlaying == true){
+                 _audioSource.Stop();
+               }
+            }
 
-           transform.position = Vector3.MoveTowards(transform.position, player.transform.position, velocidadAtaque*Time.deltaTime);
-        }
+        if (player.transform.position.x <= transform.position.x)
+        {
 
-        if (player.transform.position.x <= transform.position.x){
-            
             this.GetComponent<SpriteRenderer>().flipX = false;
 
 
-        
-        }else{
+
+        }
+        else
+        {
             this.GetComponent<SpriteRenderer>().flipX = true;
         }
 
 
     }
+
+   
 }

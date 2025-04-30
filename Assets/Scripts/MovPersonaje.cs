@@ -68,4 +68,8 @@ private Animator animatorController;
     void OnCollisionEnter2D(){
         puedoSaltar = true;
     }
+
 }
+
+
+  

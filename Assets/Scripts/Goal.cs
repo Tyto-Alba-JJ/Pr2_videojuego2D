@@ -24,12 +24,11 @@ public class Goal : MonoBehaviour
         if(col.tag == "Player")
         {   
             GameManager.marcador = GameManager.marcador+valor;
-            this.GetComponent<Animator>().SetBool("destruirmoneda", true);
             miAnimadorController.SetBool("GoalCapture", true);
             AudioManager.Instance.SonarClipUnaVez(AudioManager.Instance.fxCoin);
-            Destroy(this.gameObject, 1.0f);
+            Destroy(this.gameObject, 0.3f);
         
-        }
+        }   
 
     }
 

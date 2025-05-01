@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class FantasmaScript : MonoBehaviour
@@ -19,6 +20,8 @@ public class FantasmaScript : MonoBehaviour
     private Vector3 posInicial;
     private String estadofantasma = "Patrol";
     private GameObject player;
+
+    public static bool fantasmaMuerte = false;
 
     private float distancia;
     public float distataque = 3;
@@ -112,8 +115,10 @@ public class FantasmaScript : MonoBehaviour
             this.GetComponent<SpriteRenderer>().flipX = true;
         }
 
+        
 
     }
+
 
    
 }

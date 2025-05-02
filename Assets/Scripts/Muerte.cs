@@ -7,7 +7,7 @@ using UnityEngine.Video;
 public class Muerte : MonoBehaviour
 {
 
-
+    
      GameObject spawn;
     void Start()
     {

@@ -8,7 +8,7 @@ public class Spawn : MonoBehaviour
     public GameObject spawn;
     void Start()
     {
-        spawn = GameObject.Find("Spawner");
+        spawn = GameObject.FindWithTag("Respawn");
         transform.position = spawn.transform.position;
     }
 

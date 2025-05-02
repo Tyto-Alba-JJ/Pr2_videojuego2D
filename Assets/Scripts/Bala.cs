@@ -11,7 +11,7 @@ public class Bala : MonoBehaviour
 
     bool bolaDerecha = true;
 
-    float tiempoDestruccion = 5.0f;
+    float tiempoDestruccion = 1.0f;
 
     float queHoraes ;
 

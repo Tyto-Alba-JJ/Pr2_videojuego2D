@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.AI;
 
 
 public class MovPersonaje : MonoBehaviour
 {
+   public bool puedoDobleSaltar = false;
 
+   public static Vector3 Posicion;
     public GameObject spawn;
     public float velocidad = 5f;
     public float multiplicador = 5f;
@@ -17,6 +20,7 @@ public class MovPersonaje : MonoBehaviour
 
     private bool puedoSaltar = true;
     private bool activaSaltoFixed = false;
+    private bool activaDobleSaltoFixed = false;
 
     public bool mirandoDerecha = true;
 
@@ -28,6 +32,7 @@ public class MovPersonaje : MonoBehaviour
 
     bool SoyVerde;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,7 +40,8 @@ public class MovPersonaje : MonoBehaviour
 
         animatorController = this.GetComponent<Animator>();
 
-        transform.position = new Vector3(-3.1f, -1.0f, 0);
+        Posicion = transform.position;
+
     }
 
     // Update is called once per frame
@@ -46,7 +52,6 @@ public class MovPersonaje : MonoBehaviour
         float miDeltaTime = Time.deltaTime;
 
         movTeclas = Input.GetAxis("Horizontal");
-
 
 
         if (movTeclas < 0)
@@ -74,39 +79,36 @@ public class MovPersonaje : MonoBehaviour
 
         if (hit)
         {
-            puedoSaltar = true;
+            puedoSaltar  = true;
+            puedoDobleSaltar = true;
         }
-        else
-        {
-            puedoSaltar = false;
+        else if(puedoDobleSaltar == true)
+        {   
+            activaSaltoFixed  = true;
+
+            activaSaltoFixed = false;
         }
         ;
 
-        if (Input.GetKeyDown(KeyCode.Space) && puedoSaltar)
+        if (Input.GetKeyDown(KeyCode.Space) && puedoSaltar && puedoDobleSaltar)
         {
-            activaSaltoFixed = true;
-
+          Salto();
+          puedoSaltar = false;
+        
         }
 
         if (GameManager.vidas <= 0)
         {
             GameManager.EstoyMuerto = true;
         }
-
+        
     }
 
     void FixedUpdate()
     {
         rb.velocity = new Vector2(movTeclas * multiplicador, rb.velocity.y);
 
-        if (activaSaltoFixed == true)
-        {
-            rb.AddForce(
-              new Vector2(0, multiplicadorSalto),
-              ForceMode2D.Impulse
-          );
-          activaSaltoFixed = false;
-        }
+        
     }
 
     public void Respawnear()
@@ -128,6 +130,15 @@ public class MovPersonaje : MonoBehaviour
         
 
     }
+
+    public void Salto(){
+        rb.AddForce(
+              new Vector2(0, multiplicadorSalto),
+              ForceMode2D.Impulse );
+    }
+
+    
+
 }
 
 
